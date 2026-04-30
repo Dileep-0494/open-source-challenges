@@ -29,20 +29,19 @@ TESTS_FAILED=0
 FAILED_CHECKS=()
 
 APP_URL="http://localhost:8080"
-FLAGD_HTTP="http://localhost:8013"
+# flagd is on the docker-internal network only — verify.sh runs from
+# the workspace container's terminal, where the service name resolves.
+FLAGD_HTTP="http://flagd:8013"
 PROMETHEUS_URL="http://localhost:9090"
 TEMPO_URL="http://localhost:3200"
 GRAFANA_URL="http://localhost:3000"
 
 # ---- 1. App reachable ------------------------------------------------------
+# Lean on test_http_endpoint from lib/scripts/http.sh — handles connection
+# failure and unexpected-content cases for us.
 print_test_section "Checking lab reachability"
-if curl -fsS --max-time 5 "$APP_URL/" >/dev/null 2>&1; then
-  print_info_indent "✓ Spring Boot lab reachable at $APP_URL"
-  TESTS_PASSED=$((TESTS_PASSED + 1))
-else
-  print_error_indent "Spring Boot lab is not reachable at $APP_URL"
-  print_hint "Start the app with: ./mvnw spring-boot:run"
-  TESTS_FAILED=$((TESTS_FAILED + 1))
+if ! test_http_endpoint "$APP_URL/" "vision_state" \
+  "Start the app with: ./mvnw spring-boot:run"; then
   FAILED_CHECKS+=("app_reachable")
 fi
 print_new_line

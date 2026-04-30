@@ -10,7 +10,7 @@ Spans are already flowing into Tempo from the OpenFeature `TracesHook`, but the 
 
 The level passes when (a) `feature_flag_evaluation_requests_total` is non-zero in Prometheus, (b) Tempo spans for `fun-with-flags-java-spring` carry `feature_flag.context.*` attributes, (c) `vision_amplifier_v2` is rolled back to 100% off, and (d) the HTTP 5xx rate over the last minute is below 1%.
 
-## 🧪 The story (optional)
+## 🪐 The Backstory
 
 The trial just went wide. Phase 3 of the new vision amplifier — `vision_amplifier_v2` — was approved for the full cohort yesterday morning. The promise was straightforward: subjects emerge with sharper eyesight than they walked in with. By mid-afternoon the audit log was screaming. Subjects were stabilising 200ms slower, and roughly one in ten of them was emerging **blind** — containment failure recorded as an HTTP 500. The lab director pulled up the **Feature Flag Metrics** dashboard expecting to triage visually. The dashboard was dark. Someone had wired up traces but never finished the metrics half. There is no chart to read. The lab is studying eyesight and the lab itself cannot see.
 
@@ -21,16 +21,6 @@ Your job, in order: **turn on the lights**, find the bad arm of the trial, and *
 Coming Soon
 > ℹ️ You can still complete the challenge after this date, but points will only
 > be awarded for submissions before the deadline.
-
-## 📝 Solution Walkthrough
-
-> ⚠️ **Spoiler Alert:** The following walkthrough contains the full solution
-> to the challenge. We encourage you to try solving it on your own first.
-> Consider coming back here only if you get stuck or want to check your
-> approach.
-
-If you get stuck, follow the
-[step-by-step solution walkthrough](./solutions/expert.md).
 
 ## 💬 Join the discussion
 
@@ -113,8 +103,6 @@ The `before` hook receives a `HookContext` whose `getCtx()` returns the **merged
 
 Register it next to `TracesHook` / `MetricsHook` in `OpenFeatureConfig`. Now every flag evaluation tags its parent span with the context attributes the lab cares about. In Tempo: **Search → Service: fun-with-flags-java-spring → +Tag → `feature_flag.context.dose=underdose`** lights up exactly the requests where a tech mis-dosed, with the resolved variant on the same span event.
 
-The full implementation, including imports and a couple of subtle correctness notes, is in [solutions/expert.md](./solutions/expert.md).
-
 > ⚠️ **Allowlist, don't iterate.** Use a fixed allowlist for the same reason the `AuditHook` does — see [Intermediate's PII note](./intermediate.md#3c-an-audithook) and the [OpenTelemetry security guidance](https://opentelemetry.io/docs/security/).
 
 ### `flagd` `fractional` operation + `targetingKey`
@@ -149,7 +137,7 @@ Your Codespace comes pre-configured with the following tools:
 - A browser pointed at [`http://localhost:3000`](http://localhost:3000) for Grafana (admin / admin)
 - [`jq`](https://jqlang.github.io/jq/): Pretty-print and filter JSON from `curl`
 
-flagd, the Grafana LGTM stack, and the k6 loadgen are **sibling devcontainer services** — they come up automatically when the Codespace boots. There is no `docker compose up` step. Inside the workspace they are reachable as `flagd`, `lgtm`, and `loadgen`; on the host they are forwarded to the same `localhost:NNNN` ports that `verify.sh` and the docs assume.
+flagd, the Grafana LGTM stack, and the k6 loadgen are **sibling devcontainer services** — they come up automatically when the Codespace boots. There is no `docker compose up` step. Inside the workspace they are reachable as `flagd`, `lgtm`, and `loadgen`. The Grafana / Prometheus / Tempo / OTLP ports on `lgtm` are also forwarded onto the Codespace host so you can click them in the Ports tab; flagd stays on the docker-internal network only.
 
 ## ✅ How to Play
 
@@ -206,7 +194,7 @@ to assert traces are flowing.
 
 #### flagd
 
-flagd is on `:8013` (gRPC eval) — same as Beginner; the other ports (`8014` management/metrics, `8015` sync, `8016` OFREP) aren't used in this level.
+flagd runs on the docker-internal network only. The lab and the loadgen reach it as `flagd:8013`; you don't need to forward its ports onto the Codespace host to play this level. (`verify.sh` runs inside the workspace container so it can reach `flagd:8013` directly.)
 
 #### OTLP receivers (Ports `4317` / `4318`)
 
@@ -277,16 +265,19 @@ rate fall to zero.
 
 ### 4. Verify Your Solution
 
-Once the dashboard is healthy, run the verifier:
+Once you think you've solved the challenge, run the verification script:
 
 ```bash
-adventures/planned/00-blind-by-design/expert/verify.sh
+./verify.sh
 ```
 
-The script asserts the lab, flagd, and LGTM are reachable, that
-`vision_amplifier_v2` evaluates to `false` for a probe user, that the
-`feature_flag_evaluation_requests_total` Prometheus counter is non-zero, that
-Tempo has at least one trace for `fun-with-flags-java-spring`, and that the
-HTTP 5xx rate over the last minute is below 1%.
+**If the verification fails:**
 
-If everything turns green, your solution is solid. 🎉
+The script will tell you which checks failed. Fix the issues and run it again.
+
+**If the verification passes:**
+
+1. The script will check if your changes are committed and pushed.
+2. Follow the on-screen instructions to commit your changes if needed.
+3. Once everything is ready, the script will generate a **Certificate of Completion**.
+4. **Copy this certificate** and paste it into the [challenge thread](https://community.open-ecosystem.com/c/open-ecosystem-challenges/) to claim your victory! 🏆

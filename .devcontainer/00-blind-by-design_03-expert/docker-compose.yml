@@ -26,21 +26,19 @@ services:
       - COUNTRY=de
 
   flagd:
-    image: ghcr.io/open-feature/flagd:latest
+    image: ghcr.io/open-feature/flagd:v0.15.4
     volumes:
       - ../..:/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}:ro
     command:
       - start
       - --uri
       - file:/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/adventures/planned/00-blind-by-design/expert/flags.json
-    ports:
-      - "8013:8013"
-      - "8014:8014"
-      - "8015:8015"
-      - "8016:8016"
+    # No `ports:` block — the lab and loadgen reach flagd on the
+    # docker-internal network as `flagd:8013`. Forwarding the flagd
+    # ports onto the Codespace host is not needed to play the level.
 
   lgtm:
-    image: grafana/otel-lgtm:latest
+    image: grafana/otel-lgtm:0.26.0
     ports:
       - "3000:3000"     # Grafana UI (admin / admin)
       - "4317:4317"     # OTLP gRPC
@@ -55,7 +53,7 @@ services:
       - ../../adventures/planned/00-blind-by-design/expert/dashboards:/otel-lgtm/grafana/dashboards:ro
 
   loadgen:
-    image: grafana/k6:latest
+    image: grafana/k6:1.7.1
     command: ["run", "--quiet", "/scripts/script.js"]
     volumes:
       - ../../adventures/planned/00-blind-by-design/expert/loadgen/k6:/scripts:ro
