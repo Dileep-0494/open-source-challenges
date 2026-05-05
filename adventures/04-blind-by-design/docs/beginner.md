@@ -86,6 +86,8 @@ Before you open the forwarded port, start the Spring Boot lab so it is actually 
 
 The lab boots in the broken state — `Trial` returns the hard-coded `"untreated"` literal — and that is exactly the starting point you want.
 
+> **Set port 8080 to Public.** In the **Ports** tab, right-click port `8080` and set its visibility to **Public** so the forwarded address is accessible in your browser.
+
 ### 3. Access the UI
 
 Open the **Ports** tab in the bottom panel. You should see:
