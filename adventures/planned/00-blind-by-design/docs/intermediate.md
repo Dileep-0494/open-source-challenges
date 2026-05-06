@@ -114,7 +114,27 @@ Quick start:
 
 When the post-create finishes you'll have Java 21, the Maven wrapper, and the broken-state lab ready in `adventures/planned/00-blind-by-design/intermediate/`.
 
-### 2. Inspect the Starting Point
+### 2. Start the Lab
+
+Before you open the forwarded port, boot the lab once so it is actually serving on `:8080`. Either click **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or, from the terminal:
+
+```bash
+cd adventures/planned/00-blind-by-design/intermediate
+./mvnw spring-boot:run
+```
+
+In another terminal, confirm the broken-state symptom:
+
+```bash
+curl 'http://localhost:8080/?species=zyklop'
+# => {"value":"blurry", ...}    ← wrong cohort, no targeting fired
+```
+
+That `"blurry"` is the starting point you want: even when the request shouts `species=zyklop`, the lab has nothing in its evaluation context, so flagd's targeting can't fire and every subject drops to the default variant.
+
+Stop the app (`Ctrl+C`) and start fixing.
+
+### 3. Inspect the Starting Point
 
 The lab already has the OpenFeature SDK and the flagd contrib provider on the classpath, and the `FlagdProvider` is wired in `Resolver.RPC` mode against the flagd sibling. The `flags.json` shipping with this level is the targeting-rich version — all three branches (open `intermediate/flags.json` and you'll see this verbatim):
 
@@ -128,29 +148,13 @@ The lab already has the OpenFeature SDK and the flagd contrib provider on the cl
 }
 ```
 
-The catch: nothing in the application populates `species`, `country`, or `dose` yet. Every request lands with an empty evaluation context, so none of the branches fire and every subject walks out with `"blurry"` (the default variant) — even when they show up as a zyklop.
+The catch: nothing in the application populates `species`, `country`, or `dose` yet. Every request lands with an empty evaluation context, so none of the branches fire and every subject walks out with `"blurry"` (the default variant) — exactly the symptom you just reproduced in step 2.
 
-Boot the lab as-is to confirm the symptom — either click **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or, from the terminal:
-
-```bash
-cd adventures/planned/00-blind-by-design/intermediate
-./mvnw spring-boot:run
-```
-
-In another terminal:
-
-```bash
-curl 'http://localhost:8080/?species=zyklop'
-# => {"value":"blurry", ...}    ← wrong cohort, no targeting fired
-```
-
-Stop the app (`Ctrl+C`) and start fixing.
-
-### 3. Implement the Objective
+### 4. Implement the Objective
 
 You need three pieces.
 
-#### 3a. A `SpeciesInterceptor`
+#### 4a. A `SpeciesInterceptor`
 
 Create a Spring `HandlerInterceptor` that:
 
@@ -160,7 +164,7 @@ Create a Spring `HandlerInterceptor` that:
 
 > ℹ️ The Intermediate `verify.sh` doesn't exercise the `?userId=` branch (no Intermediate flag uses `targetingKey`). If you skip that branch, Intermediate still passes — but the Expert level's variant-distribution panel will collapse to a single bucket. The wiring is forward-looking on purpose.
 
-#### 3b. Wire the interceptor + global context + hook in `OpenFeatureConfig`
+#### 4b. Wire the interceptor + global context + hook in `OpenFeatureConfig`
 
 Update `OpenFeatureConfig` to:
 
@@ -168,7 +172,7 @@ Update `OpenFeatureConfig` to:
 - Read `COUNTRY` from the environment and set it as the **global** evaluation context — merged into every flag evaluation regardless of request.
 - Register your `AuditHook` (you'll write that next) globally on the OpenFeature API.
 
-#### 3c. An `AuditHook`
+#### 4c. An `AuditHook`
 
 Create a `Hook` that, on `after(...)`, reads the merged evaluation context off `HookContext.getCtx()` and writes an `[AUDIT]` log line naming the flag, the resolved variant, the reason, and the attributes that drove the outcome. Two design decisions worth thinking about:
 
@@ -177,11 +181,11 @@ Create a `Hook` that, on `after(...)`, reads the merged evaluation context off `
 
 > ⚠️ **Audit-log PII note.** Use a **fixed allowlist** (`List.of("species", "country", "dose")`) — never iterate the whole eval context.
 >
-> You just wired `?userId=` as the **targetingKey** in step 3a. That's the canonical example of something that lives on the eval context but does **not** belong in an audit log: it's typically a stable user id, often joins to email and account data, and audit logs are retained longer than app logs and shipped off-host to SIEMs (where redacting after the fact is hard). The allowlist is what keeps the targetingKey out of `[AUDIT]` lines even though `HookContext.getCtx()` can see it. Same discipline the Expert OTel hook will need; see [OpenTelemetry's security guidance](https://opentelemetry.io/docs/security/).
+> You just wired `?userId=` as the **targetingKey** in step 4a. That's the canonical example of something that lives on the eval context but does **not** belong in an audit log: it's typically a stable user id, often joins to email and account data, and audit logs are retained longer than app logs and shipped off-host to SIEMs (where redacting after the fact is hard). The allowlist is what keeps the targetingKey out of `[AUDIT]` lines even though `HookContext.getCtx()` can see it. Same discipline the Expert OTel hook will need; see [OpenTelemetry's security guidance](https://opentelemetry.io/docs/security/).
 
 The order matters less than you'd think — Spring will pick up `OpenFeatureConfig` as a `@Configuration` class on boot, the `@PostConstruct` will run once, and from then on every evaluation the `Trial` performs will see both contexts and trigger your hook.
 
-### 4. Run the Lab
+### 5. Re-run the Lab with a Cohort
 
 ```bash
 cd adventures/planned/00-blind-by-design/intermediate
@@ -190,7 +194,7 @@ cd adventures/planned/00-blind-by-design/intermediate
 
 `./run-austria.sh` (`COUNTRY=at`) ships alongside it for the no-targeting case. Three named launch configs in `.vscode/launch.json` (Germany / Austria / No country) give you one-click cohort switching from the **Run and Debug** view.
 
-### 5. Verify Each Cohort by Hand
+### 6. Verify Each Cohort by Hand
 
 In another terminal — exercise all three context layers and the precedence between them:
 
@@ -222,7 +226,7 @@ grep '\[AUDIT\]' app.log | head
 
 You should see one `[AUDIT] flag=vision_state variant=… reason=… species=… country=… dose=…` line per `curl` call. `clouded` outcomes log at `WARN` with the "improper dosing or off-protocol cohort, follow-up required" suffix.
 
-### 6. Verify Your Solution
+### 7. Verify Your Solution
 
 Once you think you've solved the challenge, run the verification script:
 
