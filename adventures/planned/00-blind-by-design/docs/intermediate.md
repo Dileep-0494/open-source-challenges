@@ -105,7 +105,6 @@ When the post-create finishes you'll have Java 21, the Maven wrapper, and the br
 The lab is a terminal-only level — no port is forwarded to your host, you `curl` it from inside the Codespace. Boot it once so it's actually serving on `localhost:8080`. Either click **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or, from the terminal:
 
 ```bash
-cd adventures/planned/00-blind-by-design/intermediate
 ./mvnw spring-boot:run
 ```
 
@@ -185,7 +184,6 @@ The order matters less than you'd think — Spring will pick up `OpenFeatureConf
 ### 5. Re-run the Lab with a Cohort
 
 ```bash
-cd adventures/planned/00-blind-by-design/intermediate
 ./run-germany.sh   # COUNTRY=de — exercises the country-targeting branch  (or `make lab-germany`)
 ```
 
