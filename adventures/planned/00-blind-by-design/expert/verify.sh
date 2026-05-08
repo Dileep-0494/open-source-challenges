@@ -6,12 +6,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
 source "$SCRIPT_DIR/../../../../lib/scripts/loader.sh"
 
-OBJECTIVE="By the end of this level, you should have:
-- The OpenTelemetry meter provider wired and the OpenFeature MetricsHook registered
-- At least one trace for service 'fun-with-flags-java-spring' visible in Tempo
-- The 'feature_flag_evaluation_requests_total' counter non-zero in Prometheus
-- The 'vision_amplifier_v2' fractional rollout flipped back to 100% off / 0% on
-- HTTP 5xx rate over the last minute below 1%"
+OBJECTIVE="By the end of this level, the lab hits each of these observable outcomes:
+
+- Spans for 'fun-with-flags-java-spring' visible in Tempo with feature_flag.context.<key> attributes (searching 'feature_flag.context.dose=underdose' lights up the mis-dose requests)
+- 'feature_flag_evaluation_requests_total' non-zero in Prometheus — flag evaluations show up as counters, not just spans
+- The 'vision_amplifier_v2' rollout is rolled back to 100% off — without redeploying the lab
+- HTTP 5xx rate over the last minute drops below 1%"
 
 DOCS_URL="https://dynatrace-oss.github.io/open-ecosystem-challenges/00-blind-by-design/expert"
 
