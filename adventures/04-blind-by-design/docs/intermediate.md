@@ -79,11 +79,16 @@ The flagd sibling that the Beginner level introduced is still running here — t
 
 ## ⏰ Deadline
 
-> 🚧 **Coming Soon** — this level is in the planned bucket. Final deadline will be announced when the adventure goes live.
+Tuesday, 26 May 2026 at 23:59 CET
+
+> ℹ️ You can still complete the challenge after this date, but points will only be awarded for submissions before the
+> deadline.
 
 ## 💬 Join the discussion
 
-> 🚧 **Coming Soon** — community thread will be linked here at launch.
+Share your solutions and questions in
+the [challenge thread](TODO)
+in the Open Ecosystem Community.
 
 ## ✅ How to Play
 
@@ -95,10 +100,10 @@ Quick start:
 
 - Fork the repo
 - Create a Codespace
-- Select "Adventure 00 | 🟡 Intermediate (Outcome by cohort)"
+- Select "Adventure 04 | 🟡 Intermediate (Outcome by cohort)"
 - Wait ~2-3 minutes for the Java toolchain to install (`Cmd/Ctrl + Shift + P` → `View Creation Log` to view progress)
 
-When the post-create finishes you'll have Java 21, the Maven wrapper, and the broken-state lab ready in `adventures/planned/00-blind-by-design/intermediate/`.
+When the post-create finishes you'll have Java 21, the Maven wrapper, and the broken-state lab ready in `adventures/04-blind-by-design/intermediate/`.
 
 ### 2. Start the Lab
 

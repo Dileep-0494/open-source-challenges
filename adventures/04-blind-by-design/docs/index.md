@@ -33,10 +33,12 @@ Wire OpenFeature into a Spring Boot service so the lab's `vision_state` reading 
 
 ### 🟡 Intermediate: Outcome by cohort
 
-- **Status:** 🚧 Coming Soon
+- **Status:** ✅ Ready to Play
 - **Topics:** OpenFeature targeting, transaction context, hooks, Spring `HandlerInterceptor`
 
 Add request-scoped context, a global runtime context, an invocation context at the call site, and an audit hook so the lab records the right reading per subject cohort.
+
+[**Start the Intermediate Challenge**](intermediate.md){ .md-button .md-button--primary }
 
 ### 🔴 Expert: Phase 3 — read the chart
 
