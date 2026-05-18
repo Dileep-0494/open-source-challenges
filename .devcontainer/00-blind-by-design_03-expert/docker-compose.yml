@@ -54,7 +54,11 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     volumes:
       - ../..:/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}:ro
-      - ../../adventures/planned/00-blind-by-design/expert/dashboards:/otel-lgtm/grafana/dashboards:ro
+      # Dashboard auto-provisioning: otel-lgtm scans /otel-lgtm/grafana/conf/provisioning/dashboards/
+      # for provider YAMLs, then loads dashboard JSONs from whatever path
+      # the provider references. We point at .../custom for both.
+      - ../../adventures/planned/00-blind-by-design/expert/dashboards/provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/fun-with-flags.yaml:ro
+      - ../../adventures/planned/00-blind-by-design/expert/dashboards:/otel-lgtm/grafana/conf/provisioning/dashboards/custom:ro
 
   loadgen:
     image: grafana/k6:1.7.1
