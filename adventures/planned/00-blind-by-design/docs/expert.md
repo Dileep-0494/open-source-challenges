@@ -107,7 +107,6 @@ Quick start:
 The sibling containers (flagd, the LGTM stack, the k6 loadgen) are already up — the Spring Boot lab itself isn't. Boot it before you click into the Ports tab so the forwarded `:8080` is actually serving. Either click **Run** on `Laboratory` in the Spring Boot Dashboard panel (or press **F5** with `Laboratory.java` open), or, from the terminal:
 
 ```bash
-cd adventures/planned/00-blind-by-design/expert
 ./mvnw spring-boot:run
 ```
 
