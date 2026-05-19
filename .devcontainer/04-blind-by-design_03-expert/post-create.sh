@@ -5,7 +5,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 
 # shellcheck disable=SC1091
 source "$REPO_ROOT/lib/scripts/tracker.sh"
-set_tracking_context "00-blind-by-design" "expert"
+set_tracking_context "04-blind-by-design" "expert"
 track_codespace_created
 
 # gum is used by the verify.sh / output.sh helpers
@@ -17,7 +17,7 @@ if ! command -v jq >/dev/null 2>&1; then
   sudo apt-get install -y --no-install-recommends jq
 fi
 
-CHALLENGE_DIR="$REPO_ROOT/adventures/planned/00-blind-by-design/expert"
+CHALLENGE_DIR="$REPO_ROOT/adventures/04-blind-by-design/expert"
 
 # Make the Maven wrapper executable so the participant can just `./mvnw ...`
 if [[ -f "$CHALLENGE_DIR/mvnw" ]]; then

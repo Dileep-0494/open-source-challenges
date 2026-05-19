@@ -8,13 +8,15 @@ The trial just went wide. Phase 3 of the new vision amplifier — `vision_amplif
 
 Your job, in order: **turn on the lights**, find the bad arm of the trial, and **halt enrolment** on the amplifier — all without redeploying the lab. That last constraint is the whole point of feature flags: when a rollout starts misbehaving in production, you need an operational lever that does not take twenty minutes to pull. Save the file, watch the dose drop, watch the 5xx rate fall back to baseline, watch the next batch of subjects walk out seeing.
 
-## ⏰ Deadline
+## 🏆 Rewards
 
-> 🚧 **Coming Soon** — this level is in the planned bucket. Final deadline will be announced when the adventure goes live.
+A **50% Linux Foundation certification voucher** for 1st place and **Credly badges** for the top 3 — for players who complete all three levels by **Tuesday, 26 May 2026 at 23:59 CET**. See the [adventure overview](index.md#-rewards) for ranking rules and eligibility details.
 
 ## 💬 Join the discussion
 
-> 🚧 **Coming Soon** — community thread will be linked here at launch.
+Share your solutions and questions in
+the [challenge thread](https://community.open-ecosystem.com/t/outcome-by-cohort-adventure-04-expert)
+in the Open Ecosystem Community.
 
 ## 🏗️ Architecture
 
@@ -89,7 +91,7 @@ Quick start:
 
 - Fork the repo
 - Create a Codespace
-- Select **"Adventure 00 | 🔴 Expert (Read the chart)"**
+- Select **"Adventure 04 | 🔴 Expert (Read the chart)"**
 - Wait ~2-3 minutes for the sibling containers (flagd, Grafana LGTM, k6
   loadgen) to come up. They are part of the devcontainer compose, so they
   start automatically — no `docker compose up` step.

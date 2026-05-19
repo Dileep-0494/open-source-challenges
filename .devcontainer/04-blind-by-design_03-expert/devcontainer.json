@@ -1,10 +1,10 @@
 {
-  "name": "🧪 Adventure 00 | 🔴 Expert (Read the chart)",
+  "name": "🧪 Adventure 04 | 🔴 Expert (Read the chart)",
   "dockerComposeFile": "docker-compose.yml",
   "service": "workspace",
-  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/adventures/planned/00-blind-by-design/expert",
-  "postCreateCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/00-blind-by-design_03-expert/post-create.sh",
-  "postStartCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/00-blind-by-design_03-expert/post-start.sh",
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}/adventures/04-blind-by-design/expert",
+  "postCreateCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/04-blind-by-design_03-expert/post-create.sh",
+  "postStartCommand": "bash /workspaces/${localWorkspaceFolderBasename}/.devcontainer/04-blind-by-design_03-expert/post-start.sh",
   "customizations": {
     "vscode": {
       "extensions": [
@@ -15,10 +15,10 @@
     },
     "codespaces": {
       "openFiles": [
-        "adventures/planned/00-blind-by-design/docs/expert.md",
-        "adventures/planned/00-blind-by-design/expert/otel.properties",
-        "adventures/planned/00-blind-by-design/expert/src/main/java/dev/openfeature/demo/java/demo/OpenFeatureConfig.java",
-        "adventures/planned/00-blind-by-design/expert/flags.json"
+        "adventures/04-blind-by-design/docs/expert.md",
+        "adventures/04-blind-by-design/expert/otel.properties",
+        "adventures/04-blind-by-design/expert/src/main/java/dev/openfeature/demo/java/demo/OpenFeatureConfig.java",
+        "adventures/04-blind-by-design/expert/flags.json"
       ]
     }
   },

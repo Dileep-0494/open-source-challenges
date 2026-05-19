@@ -4,7 +4,7 @@ set -euo pipefail
 # Load shared libraries
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/../../../../lib/scripts/loader.sh"
+source "$SCRIPT_DIR/../../../lib/scripts/loader.sh"
 
 OBJECTIVE="By the end of this level, the lab hits each of these observable outcomes:
 
@@ -13,10 +13,10 @@ OBJECTIVE="By the end of this level, the lab hits each of these observable outco
 - The 'vision_amplifier_v2' rollout is rolled back to 100% off — without redeploying the lab
 - HTTP 5xx rate over the last minute drops below 1%"
 
-DOCS_URL="https://dynatrace-oss.github.io/open-ecosystem-challenges/00-blind-by-design/expert"
+DOCS_URL="https://dynatrace-oss.github.io/open-ecosystem-challenges/04-blind-by-design/expert"
 
 print_header \
-  'Adventure 00: Blind by Design' \
+  'Adventure 04: Blind by Design' \
   '🔴 Expert: Read the chart' \
   'Verification'
 

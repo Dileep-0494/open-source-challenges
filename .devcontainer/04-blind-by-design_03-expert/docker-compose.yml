@@ -24,7 +24,7 @@ services:
       # Agent config lives in expert/otel.properties — that's the file
       # players edit to toggle the metrics exporter.
       - OTEL_JAVAAGENT_JAR=/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/tools/opentelemetry-javaagent.jar
-      - OTEL_JAVAAGENT_CONFIGURATION_FILE=/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/adventures/planned/00-blind-by-design/expert/otel.properties
+      - OTEL_JAVAAGENT_CONFIGURATION_FILE=/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/adventures/04-blind-by-design/expert/otel.properties
       # Trial country of registration. Read by OpenFeatureConfig via
       # System.getenv("COUNTRY") and put on the global eval context.
       - COUNTRY=de
@@ -36,7 +36,7 @@ services:
     command:
       - start
       - --uri
-      - file:/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/adventures/planned/00-blind-by-design/expert/flags.json
+      - file:/workspaces/${localWorkspaceFolderBasename:-open-ecosystem-challenges}/adventures/04-blind-by-design/expert/flags.json
     # No `ports:` block — the lab and loadgen reach flagd on the
     # docker-internal network as `flagd:8013`. Forwarding the flagd
     # ports onto the Codespace host is not needed to play the level.
@@ -57,14 +57,14 @@ services:
       # Dashboard auto-provisioning: otel-lgtm scans /otel-lgtm/grafana/conf/provisioning/dashboards/
       # for provider YAMLs, then loads dashboard JSONs from whatever path
       # the provider references. We point at .../custom for both.
-      - ../../adventures/planned/00-blind-by-design/expert/dashboards/provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/fun-with-flags.yaml:ro
-      - ../../adventures/planned/00-blind-by-design/expert/dashboards:/otel-lgtm/grafana/conf/provisioning/dashboards/custom:ro
+      - ../../adventures/04-blind-by-design/expert/dashboards/provisioning.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/fun-with-flags.yaml:ro
+      - ../../adventures/04-blind-by-design/expert/dashboards:/otel-lgtm/grafana/conf/provisioning/dashboards/custom:ro
 
   loadgen:
     image: grafana/k6:1.7.1
     command: ["run", "--quiet", "/scripts/script.js"]
     volumes:
-      - ../../adventures/planned/00-blind-by-design/expert/loadgen/k6:/scripts:ro
+      - ../../adventures/04-blind-by-design/expert/loadgen/k6:/scripts:ro
     environment:
       # The script idles while loadgen_active is "off". Flip it in flags.json
       # to start hammering the lab.

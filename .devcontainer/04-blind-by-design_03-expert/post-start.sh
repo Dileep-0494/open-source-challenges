@@ -2,11 +2,11 @@
 set -e
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-CHALLENGE_DIR="$REPO_ROOT/adventures/planned/00-blind-by-design/expert"
+CHALLENGE_DIR="$REPO_ROOT/adventures/04-blind-by-design/expert"
 
 cat <<EOF
 
-✨ Adventure 00 — Level 3 (🔴 Expert): Read the chart
+✨ Adventure 04 — Level 3 (🔴 Expert): Read the chart
 
 📂 Challenge directory:
    $CHALLENGE_DIR
@@ -36,7 +36,7 @@ EOF
 # Track that the environment is ready
 # shellcheck disable=SC1091
 source "$REPO_ROOT/lib/scripts/tracker.sh"
-set_tracking_context "blind-by-design" "expert"
+set_tracking_context "04-blind-by-design" "expert"
 track_codespace_initialized
 
 # Open the relevant files in the connected editor. customizations.codespaces.openFiles
@@ -44,7 +44,7 @@ track_codespace_initialized
 # devcontainer.json and the field is sometimes dropped). `code` is the same CLI the
 # editor uses internally and works against either the web or desktop client.
 if command -v code >/dev/null 2>&1; then
-  code "$REPO_ROOT/adventures/planned/00-blind-by-design/docs/expert.md" \
+  code "$REPO_ROOT/adventures/04-blind-by-design/docs/expert.md" \
        "$CHALLENGE_DIR/otel.properties" \
        "$CHALLENGE_DIR/src/main/java/dev/openfeature/demo/java/demo/OpenFeatureConfig.java" \
        "$CHALLENGE_DIR/flags.json" \
