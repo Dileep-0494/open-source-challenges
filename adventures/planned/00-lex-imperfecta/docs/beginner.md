@@ -12,7 +12,7 @@ Your mission: investigate the Kyverno policies and restore proper admission cont
 
 The defining principle of the Twelve Tables was that Roman law was enforced **at the gates** — before a citizen could act, not after the damage was done. Kubernetes admission control works exactly the same way: Kyverno intercepts every request to create or update a workload and checks it against your policies *before* it reaches the cluster. A misconfigured policy doesn't just fail to enforce — it fails silently, letting non-compliant workloads slip through unnoticed while you assume everything is fine.
 
-That's the situation you've inherited. Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Two `ClusterPolicy` resources are already deployed — but both are misconfigured. The policies live in `manifests/policies/`. You will edit them directly and re-apply with `kubectl`.
+That's the situation you've inherited. Your Codespace comes with a Kubernetes cluster and Kyverno pre-installed. Two `ValidatingPolicy` resources are already deployed — but both are misconfigured. The policies live in `manifests/policies/`. You will edit them directly and re-apply with `kubectl`.
 
 The pods in `manifests/pods/` are there for reference only — **you don't need to edit them**.
 
@@ -28,9 +28,8 @@ By the end of this level, you should have:
 
 ## 🧠 What You'll Learn
 
-- How Kyverno [`ClusterPolicies`](https://kyverno.io/docs/writing-policies/) and [`validate`](https://kyverno.io/docs/writing-policies/validate/) rules work
-- The difference between [`Audit` and `Enforce`](https://kyverno.io/docs/writing-policies/policy-settings/#validation-failure-action) enforcement modes
-- How to write and interpret Kyverno [`deny` conditions](https://kyverno.io/docs/writing-policies/validate/#deny-rules)
+- How Kyverno [`ValidatingPolicy`](https://kyverno.io/docs/policy-types/validating-policy/) resources and [CEL validation expressions](https://kubernetes.io/docs/reference/using-api/cel/) work
+- The difference between [`Audit`, `Deny`, and `Warn`](https://kyverno.io/docs/policy-types/validating-policy/) validation actions
 - How to use [custom label keys](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/) to enforce workload identity standards
 
 ## 🧰 Toolbox
@@ -85,9 +84,9 @@ kubectl describe pod <pod-name>
 Check the policies that are in place:
 
 ```bash
-kubectl get clusterpolicies
-kubectl get clusterpolicy require-labels -o yaml
-kubectl get clusterpolicy no-privileged-containers -o yaml
+kubectl get validatingpolicies
+kubectl get validatingpolicy require-labels -o yaml
+kubectl get validatingpolicy no-privileged-containers -o yaml
 ```
 
 You can also launch **k9s** for a terminal UI view of all cluster resources:
@@ -96,7 +95,7 @@ You can also launch **k9s** for a terminal UI view of all cluster resources:
 k9s
 ```
 
-Navigate to `ClusterPolicy` resources with `:clusterpolicies` to inspect both policies.
+Navigate to `ValidatingPolicy` resources with `:validatingpolicies` to inspect both policies.
 
 ### 3. Fix the Policies
 
@@ -127,9 +126,8 @@ This re-applies the policies and re-deploys all workloads so you immediately see
 
 #### Helpful Documentation
 
-- [Kyverno Policy Validation](https://kyverno.io/docs/writing-policies/validate/)
-- [Kyverno Enforcement Modes](https://kyverno.io/docs/writing-policies/policy-settings/#validation-failure-action)
-- [Kyverno Deny Rules](https://kyverno.io/docs/writing-policies/validate/#deny-rules)
+- [Kyverno ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
+- [CEL Validation Expressions](https://kubernetes.io/docs/reference/using-api/cel/)
 
 ### 4. Verify Your Solution
 
