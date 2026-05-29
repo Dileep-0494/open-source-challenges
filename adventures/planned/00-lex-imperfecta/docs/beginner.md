@@ -135,6 +135,7 @@ This re-applies the policies and re-deploys all workloads so you immediately see
 - [Kyverno ValidatingPolicy](https://kyverno.io/docs/policy-types/validating-policy/)
 - [Kyverno MutatingPolicy](https://kyverno.io/docs/policy-types/mutating-policy/)
 - [CEL Validation Expressions](https://kubernetes.io/docs/reference/using-api/cel/)
+- [Kyverno Playground](https://playground.kyverno.io/#/) — test your CEL expressions interactively against sample resources before applying them to the cluster
 
 ### 4. Verify Your Solution
 
