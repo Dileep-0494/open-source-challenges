@@ -15,4 +15,4 @@ track_codespace_created
   --kubens-version v0.11.0 \
   --k9s-version v0.50.18 \
   --helm-version v4.1.4
-"$REPO_ROOT/lib/kyverno/init.sh" --version 3.7.1 --cli-version v1.17.1
+"$REPO_ROOT/lib/kyverno/init.sh" --version 3.8.1 --cli-version v1.18.1

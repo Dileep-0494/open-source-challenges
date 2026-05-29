@@ -1,5 +1,5 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
 metadata:
   name: require-labels
   annotations:
@@ -11,18 +11,14 @@ metadata:
       Every citizen must declare their gens. Pods without the 'republic.rome/gens' label
       are unregistered and cannot be admitted to the Republic's cluster.
 spec:
-  validationFailureAction: Audit
-  background: true
-  rules:
-    - name: check-for-labels
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-      validate:
-        message: All workloads must declare their gens. Unregistered citizens are not permitted in the Republic.
-        pattern:
-          metadata:
-            labels:
-              republic.rome/gens: "?*"
+  validationActions:
+    - Audit
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  validations:
+    - expression: "has(object.metadata.labels) && 'republic.rome/gens' in object.metadata.labels"
+      message: "All workloads must declare their gens. Unregistered citizens are not permitted in the Republic."

@@ -1,5 +1,5 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
 metadata:
   name: no-privileged-containers
   annotations:
@@ -12,23 +12,19 @@ metadata:
       grants access to all Linux kernel capabilities and host resources, bypassing
       namespace isolation.
 spec:
-  validationFailureAction: Enforce
-  background: true
-  rules:
-    - name: privileged-containers
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-      validate:
-        message: "The Senate forbids unchecked power: privileged containers seize full control of the host and are not permitted in the Republic."
-        # Privileged containers are forbidden — this applies to regular, ephemeral and init containers.
-        pattern:
-          spec:
-            "=(ephemeralContainers)":
-              - "=(securityContext)":
-                  "=(privileged)": "false"
-            "=(initContainers)":
-              - "=(securityContext)":
-                  "=(privileged)": "false"
+  validationActions:
+    - Deny
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: ["v1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["pods"]
+  validations:
+    # Privileged containers are forbidden — this applies to regular, ephemeral and init containers.
+    - expression: |-
+        (
+          object.spec.?initContainers.orValue([]) +
+          object.spec.?ephemeralContainers.orValue([])
+        ).all(c, !c.?securityContext.?privileged.orValue(false))
+      message: "The Senate forbids unchecked power: privileged containers seize full control of the host and are not permitted in the Republic."
