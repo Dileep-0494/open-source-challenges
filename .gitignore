@@ -25,5 +25,8 @@ target/
 # OpenTelemetry Java Agent (downloaded per-Codespace by post-create.sh)
 tools/
 
+# Go build artifacts
+infra/tracker/tracker
+
 # Custom ignores/includes
 .prompts

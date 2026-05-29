@@ -10,14 +10,13 @@ import (
 )
 
 const (
-	allowedType = "open-ecosystem-challenges"
+	allowedType = "offon-challenges"
 	dtAPIPath   = "/api/v2/bizevents/ingest"
 )
 
 var validActions = map[string]bool{
-	"codespace.created":      true,
-	"codespace.initialized":  true,
-	"smoketest.completed":    true,
+	"container.created":      true,
+	"container.initialized":  true,
 	"verification.completed": true,
 }
 
@@ -26,9 +25,7 @@ type bizEvent struct {
 	Action       string   `json:"action"`
 	Adventure    string   `json:"adventure"`
 	Level        string   `json:"level"`
-	GithubUser   string   `json:"github.user"`
-	GithubRepo   string   `json:"github.repo"`
-	CodespaceID  string   `json:"codespace.id"`
+	SessionID    string   `json:"session.id"`
 	Status       string   `json:"status,omitempty"`
 	FailedChecks []string `json:"failed_checks,omitempty"`
 }
@@ -46,14 +43,8 @@ func (e *bizEvent) validate() string {
 	if e.Level == "" {
 		return "level is required"
 	}
-	if e.GithubUser == "" {
-		return "github.user is required"
-	}
-	if e.GithubRepo == "" {
-		return "github.repo is required"
-	}
-	if e.CodespaceID == "" {
-		return "codespace.id is required"
+	if e.SessionID == "" {
+		return "session.id is required"
 	}
 	return ""
 }
