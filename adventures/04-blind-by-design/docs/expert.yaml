@@ -1,51 +1,33 @@
 level: expert
 emoji: "🔴"
 title: "Read the chart"
+devcontainer: "04-blind-by-design_03-expert"
 community_url: "https://community.open-ecosystem.com/t/read-the-chart-adventure-04-expert"
 
-summary: |
-  Spans are already flowing into Tempo from the OpenFeature `TracesHook`, but the metrics half is dead — the `MeterProvider` has no exporter and the `MetricsHook` was never registered. The dashboard the operator wants to triage from is empty. The k6 loadgen is idle, waiting for a flag flip to turn it on.
+summary:
+  - "Spans are already flowing into Tempo from the OpenFeature `TracesHook`, but the metrics half is dead — the `MeterProvider` has no exporter and the `MetricsHook` was never registered. The dashboard the operator wants to triage from is empty. The k6 loadgen is idle, waiting for a flag flip to turn it on."
 
-backstory: |
-  The trial just went wide. Phase 3 of the new vision amplifier — `vision_amplifier_v2` — was approved for the full cohort yesterday morning. The promise was straightforward: subjects emerge with sharper eyesight than they walked in with. By mid-afternoon the audit log was screaming. Subjects were stabilising 200ms slower, and roughly one in ten of them was emerging **blind** — containment failure recorded as an HTTP 500. The lab director pulled up the **Feature Flag Metrics** dashboard expecting to triage visually. The dashboard was dark. Someone had wired up traces but never finished the metrics half. There is no chart to read. The lab is studying eyesight and the lab itself cannot see.
-
-  Your job, in order: **turn on the lights**, find the bad arm of the trial, and **halt enrolment** on the amplifier — all without redeploying the lab. That last constraint is the whole point of feature flags: when a rollout starts misbehaving in production, you need an operational lever that does not take twenty minutes to pull. Save the file, watch the dose drop, watch the 5xx rate fall back to baseline, watch the next batch of subjects walk out seeing.
+backstory:
+  - "The trial just went wide. Phase 3 of the new vision amplifier — `vision_amplifier_v2` — was approved for the full cohort yesterday morning. The promise was straightforward: subjects emerge with sharper eyesight than they walked in with. By mid-afternoon the audit log was screaming. Subjects were stabilising 200ms slower, and roughly one in ten of them was emerging **blind** — containment failure recorded as an HTTP 500. The lab director pulled up the **Feature Flag Metrics** dashboard expecting to triage visually. The dashboard was dark. Someone had wired up traces but never finished the metrics half. There is no chart to read. The lab is studying eyesight and the lab itself cannot see."
+  - "Your job, in order: **turn on the lights**, find the bad arm of the trial, and **halt enrolment** on the amplifier — all without redeploying the lab. That last constraint is the whole point of feature flags: when a rollout starts misbehaving in production, you need an operational lever that does not take twenty minutes to pull. Save the file, watch the dose drop, watch the 5xx rate fall back to baseline, watch the next batch of subjects walk out seeing."
 
 objective:
-  - "**Spans for `fun-with-flags-java-spring` are visible in Tempo** with `feature_flag.context.<key>` attributes — searching `feature_flag.context.dose=underdose` lights up the requests where a tech mis-dosed, with `feature_flag.variant=clouded` on the same span."
-  - "**`feature_flag_evaluation_requests_total` is non-zero in Prometheus** — flag evaluations show up as counters, not just spans."
-  - "**The Feature Flag Metrics dashboard renders.** Variant-distribution, error rate, latency p99 — all populated from the metric counters."
-  - "**The `vision_amplifier_v2` rollout is rolled back to 100% off** — without redeploying the lab."
-  - "**HTTP 5xx rate over the last minute drops below 1%.** The bad arm is contained."
+  - "Spans for `fun-with-flags-java-spring` are visible in Tempo with `feature_flag.context.<key>` attributes — searching `feature_flag.context.dose=underdose` lights up the requests where a tech mis-dosed, with `feature_flag.variant=clouded` on the same span."
+  - "`feature_flag_evaluation_requests_total` is non-zero in Prometheus — flag evaluations show up as counters, not just spans."
+  - "The Feature Flag Metrics dashboard renders. Variant-distribution, error rate, latency p99 — all populated from the metric counters."
+  - "The `vision_amplifier_v2` rollout is rolled back to 100% off — without redeploying the lab."
+  - "HTTP 5xx rate over the last minute drops below 1%. The bad arm is contained."
 
 what_you_learn:
   - "How the OpenFeature OpenTelemetry hooks (`TracesHook` and `MetricsHook`) join flag evaluations to the rest of an application's telemetry without a separate ingestion path"
-  - "How to **author your own `Hook`** — a tiny class that copies merged-eval-context attributes onto the active OTel span — to close the loop between *why* a flag resolved the way it did and *what* the operator sees in Tempo"
+  - "How to author your own `Hook` — a tiny class that copies merged-eval-context attributes onto the active OTel span — to close the loop between *why* a flag resolved the way it did and *what* the operator sees in Tempo"
   - "How [`fractional`](https://flagd.dev/reference/custom-operations/fractional-operation/) rollout in flagd buckets users by `targetingKey` — same key, same bucket, every request — and how to read that bucketing off a dashboard"
-  - "How a **flag flip** is a faster operational lever than a redeploy when a rollout is misbehaving — the difference between a one-line config change and a twenty-minute deployment"
+  - "How a flag flip is a faster operational lever than a redeploy when a rollout is misbehaving — the difference between a one-line config change and a twenty-minute deployment"
 
 architecture:
-  description: |
-    Four containers and one Spring Boot process, all on a shared Docker network.
-  diagram: |
-    ┌──────────────────────┐      OTLP/gRPC :4317      ┌────────────────────────┐
-    │  Spring Boot         │ ────────────────────────▶ │  grafana/otel-lgtm     │
-    │  fun-with-flags-     │      flag eval + HTTP     │   - Grafana   :3000    │
-    │  java-spring         │                           │   - Prometheus :9090   │
-    │  :8080               │                           │   - Tempo     :3200    │
-    └─────┬────────────────┘                           └─────────▲──────────────┘
-          │ OpenFeature SDK :8013                                │ scrape / pull
-          │ (RPC mode)                                           │
-    ┌─────▼────────────────┐                           ┌─────────┴──────────────┐
-    │  flagd               │ ◀──── poll loadgen flag ──│  k6 loadgen            │
-    │  :8013 (gRPC + HTTP  │                           │  HTTP GET /?userId=…   │
-    │         eval gateway)│                           │  (the lab interceptor  │
-    │  :8014 management /  │                           │   sets userId as the   │
-    │        metrics       │                           │   targetingKey, which  │
-    │  :8015 sync stream   │                           │   is what fractional   │
-    │  :8016 OFREP         │                           │   rollouts bucket on)  │
-    │  flags.json mounted  │                           │                        │
-    └──────────────────────┘                           └────────────────────────┘
+  - >-
+    This level runs as two containers side-by-side in your Codespace: the Spring Boot lab
+    and a flagd sidecar.
 
 toolbox:
   - name: curl
@@ -136,7 +118,7 @@ how_to_play:
 
       **No deploy. No rebuild. No restart of the lab.**
 
-helpful_docs:
+helpful_links:
   - title: "OpenFeature OTel contrib hooks (Java)"
     url: "https://github.com/open-feature/java-sdk-contrib/tree/main/hooks/open-telemetry"
     description: "where TracesHook and MetricsHook live, with constructor signatures"
