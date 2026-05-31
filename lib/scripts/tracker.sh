@@ -38,13 +38,17 @@ send_event() {
     --arg adventure "${ADVENTURE:-unknown}" \
     --arg level "${LEVEL:-unknown}" \
     --arg session_id "${OFFON_SESSION_ID:-unknown}" \
+    --arg github_user "${GITHUB_USER:-}" \
+    --arg github_repo "${GITHUB_REPOSITORY:-}" \
     --argjson extra "$extra_fields" \
     '{
       "type": $event_type,
       "action": $action,
       "adventure": $adventure,
       "level": $level,
-      "session.id": $session_id
+      "session.id": $session_id,
+      "github.user": $github_user,
+      "github.repo": $github_repo
     } + $extra'
   )
 

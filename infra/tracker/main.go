@@ -26,6 +26,8 @@ type bizEvent struct {
 	Adventure    string   `json:"adventure"`
 	Level        string   `json:"level"`
 	SessionID    string   `json:"session.id"`
+	GithubUser   string   `json:"github.user,omitempty"`
+	GithubRepo   string   `json:"github.repo,omitempty"`
 	Status       string   `json:"status,omitempty"`
 	FailedChecks []string `json:"failed_checks,omitempty"`
 }
