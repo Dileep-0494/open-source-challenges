@@ -9,14 +9,10 @@ It validates that every incoming event has `type: offon-challenges`, a known `ac
 Deployed manually via the Google Cloud CLI. One-time secret setup:
 
 ```sh
-echo -n "https://your-tenant.live.dynatrace.com" | gcloud secrets create dt-tenant-url --data-file=-
-echo -n "dt0c01.xxx" | gcloud secrets create dt-api-token --data-file=-
+echo -n "dt0c01.xxx" | gcloud secrets create offon-challenge-tracker-dt-api-token --data-file=-
 
 PROJECT_NUMBER=$(gcloud projects describe $(gcloud config get-value project) --format='value(projectNumber)')
-gcloud secrets add-iam-policy-binding dt-tenant-url \
-  --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
-  --role="roles/secretmanager.secretAccessor"
-gcloud secrets add-iam-policy-binding dt-api-token \
+gcloud secrets add-iam-policy-binding offon-challenge-tracker-dt-api-token \
   --member="serviceAccount:$PROJECT_NUMBER-compute@developer.gserviceaccount.com" \
   --role="roles/secretmanager.secretAccessor"
 ```
@@ -24,11 +20,12 @@ gcloud secrets add-iam-policy-binding dt-api-token \
 Deploy:
 
 ```sh
-gcloud run deploy tracker \
+gcloud run deploy offon-challenge-tracker \
   --source infra/tracker \
   --region europe-west1 \
   --allow-unauthenticated \
-  --set-secrets DT_TENANT_URL=dt-tenant-url:latest,DT_API_TOKEN=dt-api-token:latest
+  --set-env-vars DT_TENANT_URL=<your-tenant-url> \
+  --set-secrets DT_API_TOKEN=offon-challenge-tracker-dt-api-token:latest
 ```
 
 To update the service, re-run the deploy command.
