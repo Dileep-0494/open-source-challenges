@@ -39,7 +39,7 @@ objective:
 what_you_learn:
   - >-
     How to scope policies using [`ValidatingPolicy`](https://kyverno.io/docs/policy-types/validating-policy/)
-    (cluster-wide) and [`NamespacedValidatingPolicy`](https://kyverno.io/docs/policy-types/validating-policy/)
+    (cluster-wide) and [`NamespacedValidatingPolicy`](https://kyverno.io/docs/policy-types/validating-policy/#policy-scope)
     (per-namespace), and when to use each
   - >-
     How [CEL expressions](https://kubernetes.io/docs/reference/using-api/cel/) in `ValidatingPolicy` and

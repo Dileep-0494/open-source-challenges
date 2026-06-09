@@ -49,7 +49,7 @@ spec:
 apiVersion: v1
 kind: Pod
 metadata:
-  name: citizen
+  name: aemilia-scribe
   namespace: aegyptus
   labels:
     republic.rome/gens: aemilia
