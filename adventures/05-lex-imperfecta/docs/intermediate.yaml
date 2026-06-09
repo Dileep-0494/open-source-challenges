@@ -1,8 +1,7 @@
 level: intermediate
 emoji: "🟡"
 title: "Governing the Provinces"
-devcontainer: lex-imperfecta_intermediate
-community_url: "" # TODO: add community thread URL once the adventure is live
+devcontainer: 05-lex-imperfecta_02-intermediate
 
 summary: "Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces."
 
