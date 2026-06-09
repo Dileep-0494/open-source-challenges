@@ -10,7 +10,6 @@
   "customizations": {
     "codespaces": {
       "openFiles": [
-        "manifests/policies/no-privileged-containers.yaml",
         "manifests/policies/require-census.yaml",
         "manifests/policies/aegyptus-require-scribe-role.yaml",
         "manifests/exceptions/aegyptus-legacy-workload.yaml"
