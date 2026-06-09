@@ -10,10 +10,10 @@ set_tracking_context "lex-imperfecta" "intermediate" "05" "06" "2026"
 
 OBJECTIVE="By the end of this level, you should have:
 
-- The empire-wide laws enforcing correctly across every province — privileged containers are blocked, and every workload declares a valid gens and a province that matches the namespace it runs in
-- Aegyptus's provincial scribe law taking effect only within Aegyptus — it admits only scribe workloads there, and has no power over the other provinces
-- The legacy exception scoped to Aegyptus alone — only Aegyptus's grandfathered workload is spared the census, and no workload in any other province can claim it
-- The Tabularium's ledger clean and on file — the estate's policy report exported in the OpenReports format and saved as \`estate-audit.yaml\`"
+- Empire-wide laws enforcing across every province: no privileged containers, every workload carries a valid gens and a province matching its namespace, scoped by namespace label rather than hardcoded names
+- Aegyptus's scribe law applying only within Aegyptus, admitting scribe workloads exclusively
+- The legacy exception scoped to Aegyptus's grandfathered workload and cannot be claimed by any other province
+- The Tabularium's ledger on file: policy reports exported in OpenReports format as \`estate-audit.yaml\`"
 
 DOCS_URL="https://offon.dev/adventures/lex-imperfecta/levels/intermediate"
 
@@ -173,9 +173,10 @@ EOF
 print_new_line
 print_sub_header "2. Checking the reach of Aegyptus's provincial law..."
 
-check_admission_blocked \
+check_kyverno_violation \
+  "$SCRIPT_DIR/manifests/policies/aegyptus-require-scribe-role.yaml" \
   "Non-scribe workload in Aegyptus" \
-  "Aegyptus admits only one kind of workload — is its local law still in force there?" <<'EOF'
+  "Aegyptus admits only scribes — does its local law correctly identify workloads that are out of order?" <<'EOF'
 apiVersion: v1
 kind: Pod
 metadata:

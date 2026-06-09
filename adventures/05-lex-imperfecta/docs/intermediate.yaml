@@ -7,14 +7,14 @@ community_url: "" # TODO: add community thread URL once the adventure is live
 summary: "Fix a misconfigured Kyverno policy estate and use Policy Reporter to restore proper governance across the Republic's provinces."
 
 audience: >-
-  Platform engineers and SREs who have some familiarity with Kyverno — ideally after completing the Beginner level.
+  Platform engineers and SREs who have some familiarity with Kyverno, ideally after completing the Beginner level.
   You should be comfortable reading Kubernetes YAML and basic kubectl commands.
 
 backstory:
   - >-
     The Republic has grown. What once was a single city is now a sprawling empire of provinces, each governed by
     different magistrates with different needs. The legal scholars decided to catalogue every law in a central
-    archive — the Tabularium — so that each province's statutes could be tracked and audited in one place.
+    archive (the Tabularium) so that each province's statutes could be tracked and audited in one place.
   - >-
     But cataloguing the laws introduced new chaos. Policies meant for one province are bleeding into another.
     Exceptions that were meant to be narrow have been written too broadly. And somewhere in the estate, a
@@ -26,19 +26,15 @@ backstory:
 
 objective:
   - >-
-    The **empire-wide laws** enforce correctly across every province — privileged containers are blocked,
-    and every workload declares a valid `republic.rome/gens` and a `republic.rome/province` that matches the
-    namespace it runs in. Policies must scope to provinces using the namespace labels as the source of truth,
-    not by hardcoding individual namespace names.
+    **Empire-wide laws** enforce across every province: no privileged containers, every workload carries
+    a valid `republic.rome/gens` and `republic.rome/province` matching its namespace, scoped by namespace
+    label rather than hardcoded names
   - >-
-    **Aegyptus's provincial scribe law** takes effect only within Aegyptus — it admits only workloads carrying
-    `republic.rome/role: scribe` there, and has no power over the other provinces
+    **Aegyptus's scribe law** applies only within Aegyptus, admitting `republic.rome/role: scribe` workloads exclusively
   - >-
-    The **legacy exception** is scoped to Aegyptus alone — only Aegyptus's grandfathered workload is spared the
-    census, and no workload in any other province can claim it
+    The **legacy exception** is scoped to Aegyptus's grandfathered workload and cannot be claimed by any other province
   - >-
-    The **Tabularium's ledger** is clean and on file — the estate's policy report is exported in the OpenReports
-    format and saved as `estate-audit.yaml`
+    The **Tabularium's ledger** is on file: policy reports exported in OpenReports format as `estate-audit.yaml`
 
 what_you_learn:
   - >-
@@ -49,37 +45,26 @@ what_you_learn:
     How [CEL expressions](https://kubernetes.io/docs/reference/using-api/cel/) in `ValidatingPolicy` and
     `PolicyException` express fine-grained admission conditions
   - >-
-    How to write and scope a [`PolicyException`](https://kyverno.io/docs/policy-types/policy-exception/)
+    How to write and scope a [`PolicyException`](https://kyverno.io/docs/guides/exceptions/)
     correctly so only the intended workloads are exempt
   - >-
     How to use [Policy Reporter](https://kyverno.github.io/policy-reporter/) and the
-    [OpenReports](https://kyverno.github.io/policy-reporter/guide/openreports/) format to audit and debug a
+    [OpenReports](https://openreports.io/) format to audit and debug a
     policy estate across multiple namespaces
 
 architecture:
   - >-
-    The Republic's policy estate spans five namespaces. Four are **provinces** — `gallia`, `hispania`,
-    `britannia`, and `aegyptus` — each carrying the label `republic.rome/realm: province`. The fifth,
-    `castra`, is the **infra** namespace (`republic.rome/realm: infra`) and operates outside the provinces'
-    legal jurisdiction. Use `kubectl get ns --show-labels` to inspect these labels — they are what the
-    cluster-wide policies use to decide where to enforce.
+    Five namespaces span the estate: four **provinces** (`gallia`, `hispania`, `britannia`, `aegyptus`) with
+    `republic.rome/realm: province`, and `castra`, the **infra** namespace, with `republic.rome/realm: infra`.
+    These labels drive policy scoping; use `kubectl get ns --show-labels` to inspect them.
   - >-
-    The estate is governed by a handful of Kyverno policies. Two are **empire-wide**:
-    `no-privileged-containers` blocks privileged containers, and `require-census` requires every workload to
-    declare its `republic.rome/gens` and a `republic.rome/province` that matches its namespace. Both are meant
-    to apply across the provinces but not the infra realm. Aegyptus also carries a **local law of its own** —
-    `aegyptus-require-scribe-role` — meant to admit only scribe workloads *within Aegyptus*. Finally, a
-    **`PolicyException`** grandfathers Aegyptus's single legacy workload, which predates the census, so it
-    alone may run without a gens. Some of these are no longer doing exactly what they were meant to.
+    Two **empire-wide** policies cover all provinces: `no-privileged-containers` and `require-census`
+    (every workload must declare a valid `republic.rome/gens` and a matching `republic.rome/province`).
+    Aegyptus adds `aegyptus-require-scribe-role` for its local scribe requirement, and a **`PolicyException`**
+    covers its single legacy workload.
   - >-
-    **Edit `manifests/policies/` and `manifests/exceptions/`** — that is where the scoping has gone wrong.
-    Leave `manifests/workloads/` and `manifests/namespaces/` alone; the workloads represent the citizens and
-    their expected state, and the namespace labels are the ground truth the policies are measured against.
-    Policies act at admission, so after each change run `make apply` to redeploy the workloads and
-    re-evaluate the estate, then `make verify` to check your progress. When the estate is in order, file the
-    audit with the Tabularium (see How to Play).
-
-architecture_diagram: "" # TODO: add diagram
+    The broken policies live in `manifests/policies/` and `manifests/exceptions/`. After each change,
+    run `make apply` to redeploy the workloads, then `make verify` to check your progress.
 
 toolbox:
   - name: kubectl
@@ -92,17 +77,12 @@ toolbox:
     url: "https://k9scli.io/"
     description: Explore cluster resources and policy reports in a terminal UI
 
-services:
-  - name: Policy Reporter
-    port: 30110
-    description: Audit the full policy estate — see which policies apply to which namespaces and where violations exist
-
 how_to_play:
   - id: explore
     title: "Explore the Estate"
     content: |
-      When your Codespace is ready, the policy estate is already deployed — but something is wrong.
-      Open Policy Reporter at the forwarded port **30110** to get an overview of the estate:
+      When your Codespace is ready, the policy estate is already deployed, but something is wrong.
+      Open Policy Reporter at port **30110** (find it in the **Ports** tab) to get an overview of the estate:
 
       - Which namespaces have violations?
       - Which policies are generating results, and which are silent when they shouldn't be?
@@ -154,7 +134,7 @@ how_to_play:
       ```
 
       Policies only act at admission, so `make apply` redeploys the workloads to re-evaluate the estate against
-      your changes. Then check Policy Reporter again — the picture should improve as you fix each issue.
+      your changes. Then check Policy Reporter again. The picture should improve as you fix each issue.
 
   - id: file
     title: "File the Audit"
@@ -169,16 +149,16 @@ how_to_play:
 helpful_links:
   - title: Kyverno ValidatingPolicy
     url: "https://kyverno.io/docs/policy-types/validating-policy/"
-    description: Reference docs for ValidatingPolicy and NamespacedValidatingPolicy — the policy types you'll fix
+    description: "Reference docs for ValidatingPolicy and NamespacedValidatingPolicy: the policy types you'll fix"
   - title: Kyverno PolicyException
-    url: "https://kyverno.io/docs/policy-types/policy-exception/"
+    url: "https://kyverno.io/docs/guides/exceptions/"
     description: How to write and scope a PolicyException to exempt specific workloads
   - title: CEL Validation Expressions
     url: "https://kubernetes.io/docs/reference/using-api/cel/"
-    description: How CEL expressions work in Kubernetes admission — including accessing namespace context
+    description: How CEL expressions work in Kubernetes admission, including accessing namespace context
   - title: Policy Reporter
     url: "https://kyverno.github.io/policy-reporter/"
     description: How to use Policy Reporter to audit and visualise policy results across the cluster
   - title: OpenReports Format
-    url: "https://kyverno.github.io/policy-reporter/guide/openreports/"
+    url: "https://openreports.io/"
     description: The OpenReports standard that Kyverno uses to emit PolicyReport resources
