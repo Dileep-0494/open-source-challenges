@@ -11,7 +11,7 @@ set_tracking_context "lex-imperfecta" "expert" "05" "06" "2026"
 OBJECTIVE="By the end of this level, you should have:
 
 - The Praetorian Guard awake: Falco fires an alert every time an unauthorized process reads the census archive, with live alerts streaming into the Falcosidekick UI
-- The gate closed: the intruder is denied re-admission — the policy that kept privileged containers out now covers every path to unchecked host power
+- The gate closed: the intruder is denied re-admission; the policy that kept privileged containers out now covers every path to unchecked host power
 - The archive sealed: the census-archive secret is inaccessible to any workload that does not bear the Archivist role
 - The empire-wide laws holding: all intermediate-level checks still green across every province"
 
