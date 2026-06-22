@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Theme:** The Grand Fleet's commission office is the last thing standing between a newly built vessel and open water, a single portal where manifests are filed, provisions ordered, and routes set. Without it, nothing sails. With a broken one, nothing arrives where it should. You're the fleet's engineer: restore the commission office, connect the harbors, and when vessels start arriving with the wrong provisions even though every system reported a successful voyage, find out why.
+**Theme:** The Grand Fleet once ran like clockwork: new vessels were commissioned in days, routes set before the tide turned, and every voyage logged from departure to delivery. Now the harbour office is buried in complaints. The commission office accepts manifests but produces nothing. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.
 
 **Skills:**
 
@@ -24,9 +24,7 @@ Fix a broken Backstage software template so the commission office can register n
 
 #### Story
 
-The harbour master has filed a formal complaint. No vessels have cleared port in three weeks. The commission office is staffed but producing nothing: manifests are submitted, but repositories never appear, and no components are making it into the registry.
-
-Your mission: investigate the Backstage software template, find what's broken, and restore the commission office so captains can register new vessels again.
+The commission office has been open for weeks, but nothing is being processed: manifests are submitted, repositories never appear, and nothing makes it into the registry. Fix the broken Backstage software template so the office can start registering new vessels again.
 
 #### The Problem
 
@@ -59,9 +57,7 @@ Fix the broken integration points in the delivery pipeline so that commissioning
 
 #### Story
 
-The commission office is open again. Manifests are filed, repositories are created, components are registered. But the captains are back at the door with complaints: their vessels are stuck in the harbor. The manifest reaches the registry, but nothing moves after that. Provisions are never loaded, routes are never set, and no vessel has actually sailed.
-
-Somewhere between the commission office and the open water, the golden path is broken. Your mission: trace the delivery pipeline from end to end, find where it breaks, and connect the harbors so that a filed manifest results in a vessel underway.
+The office is back in business: manifests are filed, repositories created, components registered. But captains keep reporting the same problem: their vessels never actually sail. Somewhere between the commission office and the open water, the delivery pipeline is broken. Trace it end to end and find where it breaks.
 
 #### The Problem
 
@@ -95,13 +91,7 @@ Repair the fleet's broken navigation log, then use the complete traces it produc
 
 #### Story
 
-The fleet is operational. Vessels are being commissioned, routes are set, and the harbor is busy. But reports have been arriving from distant ports: some vessels are reaching their destination with the wrong provisions. The captains filed correct manifests. The commission office recorded everything. Every system along the route reported a successful voyage.
-
-And yet the cargo doesn't match the orders.
-
-The fleet's telemetry system is supposed to keep a precise record of every voyage: departure time, each leg of the journey, what was loaded at every stop, and the exact parameters carried from one hand to the next. But the log is dark. Someone left the commission office's instruments unconfigured, and the one section of the route that was logging isn't connecting its records to the rest.
-
-You can't read a log that was never written. Fix the instruments first. Then find where the voyage went wrong.
+The fleet is running, but something is wrong at the far end: vessels are arriving with the wrong provisions, even though every system reported a successful voyage. The telemetry instruments are dark: Backstage isn't emitting traces, and the ones that do appear are disconnected fragments. Fix the instrumentation first, then use the complete picture to find where the delivery went wrong.
 
 #### The Problem
 
