@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Theme:** The Grand Fleet once ran like clockwork: new vessels were commissioned in days, routes set before the tide turned, and every voyage logged from departure to delivery. Now the harbour office is buried in complaints. The commission office accepts manifests but produces nothing. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.
+**Theme:** The Grand Fleet's commission office is buried in complaints. Manifests are filed but nothing comes of them. Vessels that do sail arrive at port with the wrong cargo, and no one along the route can explain why. As the fleet's engineer, your mission is to restore order from keel to quayside and find out what the records are hiding.
 
 **Skills:**
 
