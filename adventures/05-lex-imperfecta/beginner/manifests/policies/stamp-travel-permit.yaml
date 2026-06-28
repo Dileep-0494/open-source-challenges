@@ -27,7 +27,4 @@ spec:
     - patchType: ApplyConfiguration
       applyConfiguration:
         expression: |
-          Object{
-            metadata: Object.metadata{
-            }
-          }
+          Object{metadata: Object.metadata{labels: {"republic.rome/travel-permit": "granted"}}}
