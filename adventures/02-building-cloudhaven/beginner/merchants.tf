@@ -8,16 +8,15 @@
 # - A storage vault (bucket) for storing merchant goods
 # - A ledger database for tracking inventory
 #
-# TODO: sooo this should create a vault AND ledger for each district but i only
-#       got it working for one. heard something about for_each? leaving this for
-#       the next person, good luck lol
 # ============================================================================
 
 # ----------------------------------------------------------------------------
 # Storage Vaults (Buckets)
-# One per district, used for storing merchant goods
+# One per enabled district, used for storing merchant goods
 # ----------------------------------------------------------------------------
 resource "google_storage_bucket" "vault" {
+  for_each = local.enabled_districts
+
   name                        = "cloudhaven-${each.key}-vault"
   location                    = "EU"
   storage_class               = "STANDARD"
@@ -54,7 +53,7 @@ resource "google_storage_bucket" "vault" {
   }
 
   labels = {
-    district    = each.key
+    district    = each.value.name
     purpose     = "merchant-storage"
     managed-by  = "opentofu"
     environment = "cloudhaven"
@@ -63,9 +62,11 @@ resource "google_storage_bucket" "vault" {
 
 # ----------------------------------------------------------------------------
 # Ledger Databases
-# One per district, used for tracking merchant inventory
+# One per enabled district, used for tracking merchant inventory
 # ----------------------------------------------------------------------------
 resource "google_sql_database_instance" "ledger" {
+  for_each = local.enabled_districts
+
   name             = "cloudhaven-${each.key}-ledger"
   database_version = "POSTGRES_15"
   region           = "europe-west1"
@@ -109,7 +110,7 @@ resource "google_sql_database_instance" "ledger" {
     }
 
     user_labels = {
-      district    = each.key
+      district    = each.value.name
       purpose     = "merchant-ledger"
       managed-by  = "opentofu"
       environment = "cloudhaven"

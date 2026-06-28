@@ -7,8 +7,19 @@
 # - Remote state backend
 # ============================================================================
 
+locals {
+  enabled_districts = {
+    for name, district in var.districts : name => district if district.enabled
+  }
+}
+
 terraform {
   required_version = ">= 1.11.0"
+
+  backend "gcs" {
+    bucket = "cloudhaven-tfstate"
+    prefix = "terraform/state"
+  }
 
   required_providers {
     google = {

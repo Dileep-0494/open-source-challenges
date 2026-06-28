@@ -12,13 +12,11 @@
 # One for all districts
 # ----------------------------------------------------------------------------
 
-# TODO: hmm the audit db isn't showing up in the plan... the enabled thing
-#       looks right to me though?? maybe check the condition idk
 resource "google_sql_database_instance" "merchant_audit" {
   lifecycle {
     # OpenTofu 1.11+ 🎉
     # https://opentofu.org/docs/v1.11/language/meta-arguments/enabled/
-    enabled = var.districts > 1
+    enabled = length(local.enabled_districts) > 1
   }
 
   name             = "cloudhaven-merchant-audit"
